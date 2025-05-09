@@ -31,3 +31,12 @@ To add/edit a secret
 nix develop
 sops sops/secrets.yaml
 ```
+
+## Deploy
+
+Make sure your ssh key is added [here](configuration/default.nix)
+
+```sh
+nix develop
+nixos-rebuild switch --flake . --target-host <user>@<host>
+```
