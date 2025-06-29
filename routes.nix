@@ -25,6 +25,7 @@
     cAdvisor.httpPort = 7080;
     caddy.httpPort = 2019;
     grafana.httpPort = 3000;
+    applicationSlug = "dash"; # todo : correct application slug, can be taken from logout URL on provider overview
   };
 
   outline = {
