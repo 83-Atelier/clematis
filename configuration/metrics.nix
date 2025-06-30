@@ -1,6 +1,7 @@
 {
   lib,
   routes,
+  config,
   ...
 }:
 {
@@ -62,6 +63,11 @@
     }
   '';
 
+  sops.secrets.grafanaClientSecret = {
+    mode = "0600";
+    owner = "${config.users.users.grafana.name}";
+  };
+
   services.grafana = {
     enable = true;
     settings = {
@@ -70,7 +76,23 @@
         domain = "${routes.metrics.subDomain}.${routes.domain}";
         root_url = "https://${routes.metrics.subDomain}.${routes.domain}";
       };
-      auth.disable_login_form = true;
+
+      auth = {
+        signout_redirect_url = "https://${routes.authentik.subDomain}.${routes.domain}/application/o/grafana/end-session/";
+        oauth_auto_login = true;
+        disable_login_form = true;
+      };
+      "auth.generic_oauth" = {
+        name = "authentik";
+        enabled = true;
+        client_id = "AlH37DQbUJxTHq712RsIBJStU1qU2qsmq0lN16X5";
+        client_secret = "$__file{${config.sops.secrets.grafanaClientSecret.path}}";
+        scopes = "openid email profile";
+        auth_url = "https://${routes.authentik.subDomain}.${routes.domain}/application/o/authorize/";
+        token_url = "https://${routes.authentik.subDomain}.${routes.domain}/application/o/token/";
+        api_url = "https://${routes.authentik.subDomain}.${routes.domain}/application/o/userinfo/";
+        role_attribute_path = "contains(groups, 'grafana Admins') && 'Admin' || 'Viewer'";
+      };
     };
     provision.datasources.settings = {
       datasources = [
