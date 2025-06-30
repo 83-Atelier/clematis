@@ -77,21 +77,21 @@
       };
 
       auth = {
-        signout_redirect_url = "https://${routes.authentik.subDomain}.${routes.domain}/application/o/${routes.metrics.applicationSlug}/end-session/";
+        signout_redirect_url = "https://${routes.authentik.subDomain}.${routes.domain}/application/o/grafana/end-session/";
         oauth_auto_login = true;
+        disable_login_form = true;
       };
       "auth.generic_oauth" = {
         name = "authentik";
         enabled = true;
-        client_id = "MuFTPc2aPXUUoL6UKJQJ1cx35Ie5isHVG8cssUqV";
-        client_secret = " $__file{${config.sops.secrets.grafanaClientSecret.path}}";
+        client_id = "AlH37DQbUJxTHq712RsIBJStU1qU2qsmq0lN16X5";
+        client_secret = "$__file{${config.sops.secrets.grafanaClientSecret.path}}";
         scopes = "openid email profile";
         auth_url = "https://${routes.authentik.subDomain}.${routes.domain}/application/o/authorize/";
         token_url = "https://${routes.authentik.subDomain}.${routes.domain}/application/o/token/";
         api_url = "https://${routes.authentik.subDomain}.${routes.domain}/application/o/userinfo/";
-        role_attribute_path = "contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'";
+        role_attribute_path = "contains(groups, 'grafana Admins') && 'Admin' || 'Viewer'";
       };
-      auth.disable_login_form = true;
     };
     provision.datasources.settings = {
       datasources = [
