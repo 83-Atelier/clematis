@@ -63,9 +63,10 @@
     }
   '';
 
-
-  sops.secrets.grafanaClientSecret = {};
-  sops.secrets.grafanaClientSecret.owner = config.users.users.grafana.name;
+  sops.secrets.grafanaClientSecret = {
+    mode = "0600";
+    owner = "${config.users.users.grafana.name}";
+  };
 
   services.grafana = {
     enable = true;
